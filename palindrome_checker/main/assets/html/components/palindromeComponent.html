@@ -1,0 +1,77 @@
+<script>
+    window.palindromeComponentData = function () {
+        return {
+            palindromeValue: "",
+            showResults: false,
+            isSuccessfullResults: false,
+            resultsMessage: "",
+            checkPalindrome() {
+                this.showResults = true;
+
+                // If the input is empty
+                if (!this.palindromeValue) {
+                    this.isSuccessfullResults = false;
+                    this.resultsMessage =
+                        "You need to provide a value in order to check if it is a palindrome!";
+                    return;
+                }
+
+                const input = this.palindromeValue.toString(); // Convert input to string
+
+                // Remove special characters and spaces from the input
+                const sanitizedInput = input.replace(/[^A-Za-z0-9]/g, "").toLowerCase();
+
+                // Check if the sanitized input is empty after removing special characters
+                if (!sanitizedInput) {
+                    this.isSuccessfullResults = false;
+                    this.resultsMessage =
+                        "Invalid input! Please provide a valid alphanumeric value.";
+                    return;
+                }
+
+                // Reverse the input
+                const reversedInput = sanitizedInput.split("").reverse().join("");
+
+                // Check if the input and its reverse are equal
+                if (sanitizedInput !== reversedInput) {
+                    this.isSuccessfullResults = false;
+                    this.resultsMessage =
+                        `${this.palindromeValue} is not a palindrome!`;
+                    return;
+                }
+
+                this.isSuccessfullResults = true;
+                this.resultsMessage = `${this.palindromeValue} is a palindrome!`;
+            },
+        };
+    };
+</script>
+<div
+    x-data="palindromeComponentData();"
+    class="flex flex-col gap-2 shadow-lg w-100 px-3 py-5 rounded-lg bg-gradient-to-br from-purple-400 to-pink-300"
+>
+    <form action="" class="flex gap-2">
+        <input
+            type="text"
+            name="palindromeValue"
+            id="palindromeValue"
+            placeholder="               Input"
+            class="w-full h-full p-2 border-2 rounded-md placeholder-purple-400 focus:ring-purple-500 focus:ring focus:ring-offset-2 focus:ring-offset-white"
+            x-model="palindromeValue"
+        />
+        <button
+            type="button"
+            class="text-white bg-gradient-to-br from-purple-500 to-purple-700 hover:from-purple-700 hover:to-purple-900 rounded"
+            @click="checkPalindrome();"
+        >
+            <div class="hover:scale-110 px-4 py-1">Check</div>
+        </button>
+    </form>
+    <div
+        x-show="showResults"
+        x-html="resultsMessage"
+        class="p-3 text-white font-bold bg-gradient-to-br rounded-lg shadow-lg"
+        :class="{'from-green-500 to-green-700': isSuccessfullResults,
+            'from-red-500 to-red-700': !isSuccessfullResults}"
+    ></div>
+</div>
